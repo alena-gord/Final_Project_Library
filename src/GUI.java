@@ -46,15 +46,56 @@ public class GUI extends JFrame {
 
         // ADD
         addBtn.addActionListener(e -> {
-            String title = JOptionPane.showInputDialog("Title:");
-            String author = JOptionPane.showInputDialog("Author:");
-            String year = JOptionPane.showInputDialog("Year:");
-            String ISBN = JOptionPane.showInputDialog("ISBN:");
-            String genre = JOptionPane.showInputDialog("Genre:");
-            String status = JOptionPane.showInputDialog("Status:");
+//            String title = JOptionPane.showInputDialog("Title:");
+//            String author = JOptionPane.showInputDialog("Author:");
+//            String year = JOptionPane.showInputDialog("Year:");
+//            String ISBN = JOptionPane.showInputDialog("ISBN:");
+//            String genre = JOptionPane.showInputDialog("Genre:");
+//            String status = JOptionPane.showInputDialog("Status:");
+//
+//            manager.addBook(new Book(title, author, year, ISBN, genre, status));
+//            table.updateUI();
+            JTextField titleField = new JTextField();
+            JTextField authorField = new JTextField();
+            JTextField yearField = new JTextField();
+            JTextField isbnField = new JTextField();
+            JComboBox genreField = new JComboBox<>(new String[]{
+                    "--Pick Genre--", "Romance", "Mystery", "Science Fiction", "Fantasy", "Biography", "Historical Fiction", "Thriller", "Textbook", "Other"
+            });
+            JComboBox statusField = new JComboBox<>(new String []{
+                    "--Update Status--", "Available", "Checked Out"
+            });
+            JTextField comments = new JTextField();
 
-            manager.addBook(new Book(title, author, year, ISBN, genre, status));
-            table.updateUI();
+            JPanel panel = new JPanel(new GridLayout(8, 2, 10, 15));
+            panel.add(new JLabel("Title:"));
+            panel.add(new JLabel("Author:"));
+            panel.add(titleField);
+            panel.add(authorField);
+            panel.add(new JLabel("Year:"));
+            panel.add(new JLabel("ISBN:"));
+            panel.add(yearField);
+            panel.add(isbnField);
+            panel.add(new JLabel("Genre:"));
+            panel.add(new JLabel("Status:"));
+            panel.add(genreField);
+            panel.add(statusField);
+            panel.add(new JLabel("Comments:"));
+            panel.add(comments);
+
+            int result = JOptionPane.showConfirmDialog(this, panel, "Add Book", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION) {
+                manager.addBook(new Book(
+                        titleField.getText(),
+                        authorField.getText(),
+                        yearField.getText(),
+                        isbnField.getText(),
+                        genreField.getSelectedItem().toString(),
+                        statusField.getSelectedItem().toString()
+                ));
+                model.fireTableDataChanged();
+            }
         });
 
         // DELETE
