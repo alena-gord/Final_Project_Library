@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.table.DefaultTableCellRenderer;
+
 
 public class GUI extends JFrame {
 
@@ -16,6 +18,45 @@ public class GUI extends JFrame {
         setLayout(new BorderLayout());
 
         add(new JScrollPane(table), BorderLayout.CENTER);
+
+
+        table.setDefaultRenderer(Object.class,
+                new DefaultTableCellRenderer() {
+
+                    @Override
+                    public Component getTableCellRendererComponent(
+                            JTable table,
+                            Object value,
+                            boolean isSelected,
+                            boolean hasFocus,
+                            int row,
+                            int column) {
+
+                        Component c =
+                                super.getTableCellRendererComponent(
+                                        table,
+                                        value,
+                                        isSelected,
+                                        hasFocus,
+                                        row,
+                                        column);
+
+                        if (row % 2 == 0) {
+                            c.setBackground(new Color(255, 255, 255));
+                        }
+                        else {
+                            c.setBackground(new Color(211, 211, 211));
+                        }
+
+                        if (isSelected) {
+                            c.setBackground(Color.YELLOW);
+                        }
+
+                        return c;
+                    }
+                });
+
+
 
         JPanel top = new JPanel();
         JPanel bottom = new JPanel();
@@ -109,7 +150,6 @@ public class GUI extends JFrame {
                 model.fireTableDataChanged();
             }
         });
-
 
         // DELETE
         deleteBtn.addActionListener(e -> {
