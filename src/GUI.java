@@ -18,11 +18,16 @@ public class GUI extends JFrame {
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         JPanel top = new JPanel();
+        JPanel bottom = new JPanel();
+
         JButton loadBtn = new JButton("Load");
         JButton saveBtn = new JButton("Save");
         JButton addBtn = new JButton("Add");
         JButton deleteBtn = new JButton("Delete");
         JButton searchBtn = new JButton("Search");
+        JButton gameBtn = new JButton("Game");
+        JButton scanBtn = new JButton("Scanner");
+
 
         top.add(loadBtn);
         top.add(saveBtn);
@@ -30,8 +35,13 @@ public class GUI extends JFrame {
         top.add(deleteBtn);
         top.add(searchField);
         top.add(searchBtn);
+        bottom.add(gameBtn);
+        bottom.add(scanBtn);
+
 
         add(top, BorderLayout.NORTH);
+        add(bottom, BorderLayout.SOUTH);
+
 
         // LOAD
         loadBtn.addActionListener(e -> {
