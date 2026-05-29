@@ -110,6 +110,7 @@ public class GUI extends JFrame {
             }
         });
 
+
         // DELETE
         deleteBtn.addActionListener(e -> {
             int row = table.getSelectedRow();
