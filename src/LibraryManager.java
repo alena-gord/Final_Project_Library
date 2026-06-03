@@ -30,6 +30,7 @@ public class LibraryManager {
                 pw.print("\"ISBN\":\"" + b.getISBN() + "\",");
                 pw.print("\"genre\":\"" + b.getGenre() + "\",");
                 pw.print("\"status\":\"" + b.getStatus() + "\"");
+                pw.print("\"comments\":\"" + b.getComments() + "\"");
 
                 pw.print("}");
 
@@ -79,6 +80,7 @@ public class LibraryManager {
                 String ISBN = "";
                 String genre = "";
                 String status = "";
+                String comments = "";
 
                 for (String p : parts) {
 
@@ -115,6 +117,10 @@ public class LibraryManager {
                     if (key.equals("status")) {
                         status = value;
                     }
+
+                    if (key.equals("comments")) {
+                        comments = value;
+                    }
                 }
 
                 books.add(new Book(
@@ -123,7 +129,8 @@ public class LibraryManager {
                         year,
                         ISBN,
                         genre,
-                        status
+                        status,
+                        comments
                 ));
             }
 

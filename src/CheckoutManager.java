@@ -32,14 +32,47 @@ import javax.swing.*;
                      null,
                      "Book checked out successfully."
              );
-         }
-         else {
+         } else {
 
-             JOptionPane.showMessageDialog(
+             Object[] options = {"Check In", "Close"};
+             int choice = JOptionPane.showOptionDialog(
                      null,
-                     "Checked out by Student ID: "
-                             + book.getCheckedOutBy()
+                     "Checked out by Student ID: " + book.getCheckedOutBy(),
+                     "Book Status",
+                     JOptionPane.YES_NO_OPTION,
+                     JOptionPane.INFORMATION_MESSAGE,
+                     null,
+                     options,
+                     options[1]
              );
+
+             if (choice == 0) { // Check In clicked
+                 String studentID = JOptionPane.showInputDialog(
+                         null,
+                         "Enter Student ID to check in:"
+                 );
+
+                 if (studentID == null) return;
+
+                 if (!studentID.equals(book.getCheckedOutBy())) {
+                     JOptionPane.showMessageDialog(
+                             null,
+                             "Incorrect Student ID. Cannot check in.",
+                             "Error",
+                             JOptionPane.ERROR_MESSAGE
+                     );
+                     return;
+                 }
+
+                 book.setStatus("Available");
+                 book.setCheckedOutBy("");
+
+                 JOptionPane.showMessageDialog(
+                         null,
+                         "Book checked in successfully."
+                 );
+             }
          }
      }
-}
+
+ }

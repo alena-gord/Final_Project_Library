@@ -28,24 +28,87 @@ public class GUI extends JFrame {
             public void mouseClicked(MouseEvent e) {
 
                 if (e.getClickCount() == 2) {
+                    int row = table.convertRowIndexToModel(table.getSelectedRow());
+                    if (row < 0) return;
 
-                    int row = table.convertRowIndexToModel(
-                            table.getSelectedRow()
+                    Book selectedBook = manager.getBooks().get(row);
+
+                    Object[] options = {"Check Out / In", "Edit Book"};
+                    int choice = JOptionPane.showOptionDialog(null, "What would you like to do with this book?", "Select Action", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]
                     );
 
-                    if (row >= 0) {
-
-                        Book selectedBook =
-                                manager.getBooks().get(row);
-
-                        CheckoutManager.handleBook(
-                                selectedBook
-                        );
-
+                    if (choice == 0) {
+                        CheckoutManager.handleBook(selectedBook);
                         table.repaint();
+
+                    } else if (choice == 1) {
+                        Book b = selectedBook;
+
+                        JTextField titleField = new JTextField(b.getTitle());
+                        JTextField authorField = new JTextField(b.getAuthor());
+                        JTextField yearField = new JTextField(b.getYear());
+                        JTextField isbnField = new JTextField(b.getISBN());
+
+                        JComboBox<String> genreField = new JComboBox<>(new String[]{
+                                "--Pick Genre--", "Romance", "Mystery", "Science Fiction", "Fantasy", "Biography", "Historical Fiction", "Thriller", "Textbook", "Other"
+                        });
+                        genreField.setSelectedItem(b.getGenre());
+
+                        JComboBox<String> statusField = new JComboBox<>(new String[]{
+                                "Available", "Checked Out"
+                        });
+                        statusField.setSelectedItem(b.getStatus());
+                        statusField.setEnabled(false);
+
+                        JTextField commentsField = new JTextField();
+
+                        JPanel panel = new JPanel(new GridLayout(8, 2, 10, 15));
+                        panel.add(new JLabel("Title:"));
+                        panel.add(new JLabel("Author:"));
+                        panel.add(titleField);
+                        panel.add(authorField);
+                        panel.add(new JLabel("Year:"));
+                        panel.add(new JLabel("ISBN:"));
+                        panel.add(yearField);
+                        panel.add(isbnField);
+                        panel.add(new JLabel("Genre:"));
+                        panel.add(new JLabel("Status:"));
+                        panel.add(genreField);
+                        panel.add(statusField);
+                        panel.add(new JLabel("Comments:"));
+                        panel.add(commentsField);
+
+                        while (true) {
+                            int result = JOptionPane.showConfirmDialog(null, panel, "Edit Book", JOptionPane.OK_CANCEL_OPTION);
+
+                            if (result != JOptionPane.OK_OPTION) break;
+
+                            if (titleField.getText().trim().isEmpty() ||
+                                    authorField.getText().trim().isEmpty() ||
+                                    yearField.getText().trim().isEmpty() ||
+                                    isbnField.getText().trim().isEmpty() ||
+                                    genreField.getSelectedItem().toString().equals("--Pick Genre--")) {
+
+                                JOptionPane.showMessageDialog(null, "Please fill in all fields.", "Missing Info", JOptionPane.WARNING_MESSAGE);
+
+                            } else {
+                                b.setTitle(titleField.getText());
+                                b.setAuthor(authorField.getText());
+                                b.setYear(yearField.getText());
+                                b.setISBN(isbnField.getText());
+                                b.setGenre(genreField.getSelectedItem().toString());
+                                b.setStatus(statusField.getSelectedItem().toString());
+                                b.setComments(commentsField.getText());
+
+                                model.fireTableDataChanged();
+                                table.repaint();
+                                break;
+                            }
+                        }
                     }
                 }
             }
+
         });
 
         add(new JScrollPane(table), BorderLayout.CENTER);
@@ -133,15 +196,6 @@ public class GUI extends JFrame {
 
         // ADD
         addBtn.addActionListener(e -> {
-//            String title = JOptionPane.showInputDialog("Title:");
-//            String author = JOptionPane.showInputDialog("Author:");
-//            String year = JOptionPane.showInputDialog("Year:");
-//            String ISBN = JOptionPane.showInputDialog("ISBN:");
-//            String genre = JOptionPane.showInputDialog("Genre:");
-//            String status = JOptionPane.showInputDialog("Status:");
-//
-//            manager.addBook(new Book(title, author, year, ISBN, genre, status));
-//            table.updateUI();
             JTextField titleField = new JTextField();
             JTextField authorField = new JTextField();
             JTextField yearField = new JTextField();
@@ -150,8 +204,9 @@ public class GUI extends JFrame {
                     "--Pick Genre--", "Romance", "Mystery", "Science Fiction", "Fantasy", "Biography", "Historical Fiction", "Thriller", "Textbook", "Other"
             });
             JComboBox statusField = new JComboBox<>(new String []{
-                    "--Update Status--", "Available", "Checked Out"
+                     "Available", "Checked Out"
             });
+            statusField.setEnabled(false);
             JTextField comments = new JTextField();
 
             JPanel panel = new JPanel(new GridLayout(8, 2, 10, 15));
@@ -170,18 +225,34 @@ public class GUI extends JFrame {
             panel.add(new JLabel("Comments:"));
             panel.add(comments);
 
-            int result = JOptionPane.showConfirmDialog(this, panel, "Add Book", JOptionPane.OK_CANCEL_OPTION);
+            while (true) {
 
-            if (result == JOptionPane.OK_OPTION) {
-                manager.addBook(new Book(
-                        titleField.getText(),
-                        authorField.getText(),
-                        yearField.getText(),
-                        isbnField.getText(),
-                        genreField.getSelectedItem().toString(),
-                        statusField.getSelectedItem().toString()
-                ));
-                model.fireTableDataChanged();
+                int result = JOptionPane.showConfirmDialog(this, panel, "Add Book", JOptionPane.OK_CANCEL_OPTION);
+
+                if (result != JOptionPane.OK_OPTION) {
+                    break;
+                }
+
+                if (titleField.getText().trim().isEmpty() ||
+                        authorField.getText().trim().isEmpty() ||
+                        yearField.getText().trim().isEmpty() ||
+                        isbnField.getText().trim().isEmpty() ||
+                        genreField.getSelectedItem().toString().equals("--Pick Genre--")) {
+
+                    JOptionPane.showMessageDialog(this, "Please fill in ALL fields before adding the book!", "WARNING", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    manager.addBook(new Book(
+                            titleField.getText(),
+                            authorField.getText(),
+                            yearField.getText(),
+                            isbnField.getText(),
+                            genreField.getSelectedItem().toString(),
+                            statusField.getSelectedItem().toString(),
+                            comments.getText()
+                    ));
+                    model.fireTableDataChanged();
+                    break;
+                }
             }
         });
 
@@ -208,11 +279,13 @@ public class GUI extends JFrame {
                         b.getYear().contains(query) ||
                         b.getISBN().toLowerCase().contains(query) ||
                         b.getGenre().toLowerCase().contains(query) ||
-                        b.getStatus().toLowerCase().contains(query)) {
+                        b.getStatus().toLowerCase().contains(query) ||
+                        b.getComments().toLowerCase().contains(query)) {
 
                     table.addRowSelectionInterval(i, i);
                 }
             }
         });
     }
+
 }

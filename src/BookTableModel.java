@@ -3,7 +3,7 @@ import javax.swing.table.AbstractTableModel; //Using this because it's easier to
 public class BookTableModel extends AbstractTableModel {
 
     private LibraryManager manager;
-    private String[] columns = {"Title", "Author", "Year", "ISBN", "Genre", "Status"};
+    private String[] columns = {"Title", "Author", "Year", "ISBN", "Genre", "Status","Comments"};
 
     public BookTableModel(LibraryManager manager) {
         this.manager = manager;
@@ -35,6 +35,7 @@ public class BookTableModel extends AbstractTableModel {
             case 3 -> b.getISBN();
             case 4 -> b.getGenre();
             case 5 -> b.getStatus();
+            case 6 -> b.getComments();
             default -> null;
         };
     }
@@ -55,6 +56,7 @@ public class BookTableModel extends AbstractTableModel {
             case 3 -> b.setISBN(value.toString());
             case 4 -> b.setGenre(value.toString());
             case 5 -> b.setStatus(value.toString());
+            case 6 -> b.setComments(value.toString());
         }
 
         fireTableCellUpdated(row, col);

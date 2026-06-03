@@ -6,14 +6,16 @@ public class Book {
     private String genre;
     private String status;
     private String checkedOutBy;
+    private String comments;
 
-    public Book(String title, String author, String year, String ISBN, String genre, String status) {
+    public Book(String title, String author, String year, String ISBN, String genre, String status, String comments) {
         this.title = title;
         this.author = author;
         this.year = year;
         this.ISBN = ISBN;
         this.genre = genre;
         this.status = status;
+        this.comments = this.comments;
     }
     public String getCheckedOutBy() {
         return checkedOutBy;
@@ -29,6 +31,8 @@ public class Book {
     public String getISBN() { return ISBN; }
     public String getGenre() { return genre; }
     public String getStatus() { return status; }
+    public String getComments() { return comments; }
+
 
     public void setTitle(String title) { this.title = title; }
     public void setAuthor(String author) { this.author = author; }
@@ -36,4 +40,5 @@ public class Book {
     public void setISBN(String ISBN) { this.ISBN = ISBN; }
     public void setGenre(String genre) { this.genre = genre; }
     public void setStatus(String status) { this.status = status; }
+    public void setComments(String comments) { this.comments = comments; }
 }
