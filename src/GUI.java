@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class GUI extends JFrame {
@@ -16,6 +18,35 @@ public class GUI extends JFrame {
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        table.setSelectionMode(
+                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+        );
+
+        table.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 2) {
+
+                    int row = table.convertRowIndexToModel(
+                            table.getSelectedRow()
+                    );
+
+                    if (row >= 0) {
+
+                        Book selectedBook =
+                                manager.getBooks().get(row);
+
+                        CheckoutManager.handleBook(
+                                selectedBook
+                        );
+
+                        table.repaint();
+                    }
+                }
+            }
+        });
 
         add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -66,7 +97,7 @@ public class GUI extends JFrame {
         JButton addBtn = new JButton("Add");
         JButton deleteBtn = new JButton("Delete");
         JButton searchBtn = new JButton("Search");
-        JButton gameBtn = new JButton("Game");
+        JButton gameBtn = new JButton("Play Game");
         JButton scanBtn = new JButton("Scanner");
 
 
@@ -83,16 +114,19 @@ public class GUI extends JFrame {
         add(top, BorderLayout.NORTH);
         add(bottom, BorderLayout.SOUTH);
 
-
+        //GAME
+        gameBtn.addActionListener(e -> {
+            GameLauncher.launchGame();
+        });
         // LOAD
         loadBtn.addActionListener(e -> {
-            manager.loadFromFile("books.tsv");
+            manager.loadFromFile("books.json");
             table.updateUI();
         });
 
         // SAVE
         saveBtn.addActionListener(e -> {
-            manager.saveToFile("books.tsv");
+            manager.saveToFile("books.json");
         });
 
 
@@ -160,17 +194,23 @@ public class GUI extends JFrame {
 
         // SEARCH
         searchBtn.addActionListener(e -> {
+
             String query = searchField.getText().toLowerCase();
 
+            table.clearSelection();
+
             for (int i = 0; i < manager.getBooks().size(); i++) {
+
                 Book b = manager.getBooks().get(i);
 
                 if (b.getTitle().toLowerCase().contains(query) ||
                         b.getAuthor().toLowerCase().contains(query) ||
-                        b.getYear().contains(query)) {
+                        b.getYear().contains(query) ||
+                        b.getISBN().toLowerCase().contains(query) ||
+                        b.getGenre().toLowerCase().contains(query) ||
+                        b.getStatus().toLowerCase().contains(query)) {
 
-                    table.setRowSelectionInterval(i, i);
-                    break;
+                    table.addRowSelectionInterval(i, i);
                 }
             }
         });

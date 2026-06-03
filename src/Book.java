@@ -5,6 +5,7 @@ public class Book {
     private String ISBN;
     private String genre;
     private String status;
+    private String checkedOutBy;
 
     public Book(String title, String author, String year, String ISBN, String genre, String status) {
         this.title = title;
@@ -13,6 +14,13 @@ public class Book {
         this.ISBN = ISBN;
         this.genre = genre;
         this.status = status;
+    }
+    public String getCheckedOutBy() {
+        return checkedOutBy;
+    }
+
+    public void setCheckedOutBy(String checkedOutBy) {
+        this.checkedOutBy = checkedOutBy;
     }
 
     public String getTitle() { return title; }
